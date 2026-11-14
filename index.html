@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buckapp</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f1f4f8;
+  margin: 0;
+  padding: 20px;
+}
+header {
+  background: #123c69;
+  color: white;
+  padding: 22px;
+  border-radius: 12px;
+  text-align: center;
+}
+h2 { color: #123c69; }
+input, select, button {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border-radius: 7px;
+  border: 1px solid #ccc;
+}
+button {
+  background: #123c69;
+  color: white;
+  border: none;
+  font-weight: bold;
+}
+.projet {
+  background: white;
+  padding: 15px;
+  margin: 12px 0;
+  border-radius: 9px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>BUCKAPP</h1>
+<p>Suivez la réalisation de vos projets</p>
+</header>
+
+<h2>Ajouter un projet</h2>
+
+<input id="nom" placeholder="Nom du projet">
+<input id="description" placeholder="Description du projet">
+
+<select id="statut">
+<option>À venir</option>
+<option>En cours</option>
+<option>Terminé</option>
+</select>
+
+<button onclick="ajouterProjet()">Ajouter le projet</button>
+
+<h2>Mes projets</h2>
+<div id="liste"></div>
+
+<script>
+let projets = JSON.parse(localStorage.getItem("projets")) || [];
+
+function afficherProjets() {
+  document.getElementById("liste").innerHTML = "";
+
+  projets.forEach((p, i) => {
+    document.getElementById("liste").innerHTML += `
+      <div class="projet">
+        <h3>${p.nom}</h3>
+        <p>${p.description}</p>
+        <strong>Statut : ${p.statut}</strong>
+        <button onclick="supprimerProjet(${i})">Supprimer</button>
+      </div>
+    `;
+  });
+}
+
+function ajouterProjet() {
+  let nom = document.getElementById("nom").value;
+  let description = document.getElementById("description").value;
+  let statut = document.getElementById("statut").value;
+
+  if (!nom.trim()) {
+    alert("Veuillez donner un nom au projet.");
+    return;
+  }
+
+  projets.push({nom, description, statut});
+
+  localStorage.setItem("projets", JSON.stringify(projets));
+
+  document.getElementById("nom").value = "";
+  document.getElementById("description").value = "";
+
+  afficherProjets();
+}
+
+function supprimerProjet(i) {
+  projets.splice(i, 1);
+  localStorage.setItem("projets", JSON.stringify(projets));
+  afficherProjets();
+}
+
+afficherProjets();
+</script>
+
+</body>
+</html>
